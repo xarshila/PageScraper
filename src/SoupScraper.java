@@ -16,6 +16,10 @@ import org.jsoup.select.Elements;
  * @author Lasha Kharshiladze
  */
 public class SoupScraper {
+    private static final String USER_AGENT = "Mozilla/5.0 (Windows; U; WindowsNT 5.1;"
+                                + " en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6";
+    private static final String REFERRER = "http://www.google.com";
+    
     // Links that are not meaninfull for example: '#', "javascript:void(0)"
     private final Set<String> bannedLinks;
     
@@ -40,7 +44,7 @@ public class SoupScraper {
         List<String> pageLinks  = new LinkedList<String>();
 
         try {
-            Connection  connection = Jsoup.connect(url);
+            Connection  connection = Jsoup.connect(url).userAgent(USER_AGENT).referrer(REFERRER);
             Document document = connection.get();
             pageLinks = parseDocumentByCSS(document, "a[href]", "href");
         } catch (IOException e) {

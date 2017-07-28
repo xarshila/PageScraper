@@ -7,7 +7,7 @@ public class WebScraperApp {
         System.out.println("Welcome WebScraper Console Applcation!");
         System.out.println("-------------------------------------");
         System.out.println("Write arbitrary url and Scraper lists down \n"
-                 + "all Page Links on that URL (wirte" + SENTINEL +"for exit)");
+                 + "all Page Links on that URL (wirte " + SENTINEL +" for exit)");
         
         SoupScraper scraper = new SoupScraper();
         Scanner sc = new Scanner(System.in);
