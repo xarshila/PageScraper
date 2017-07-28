@@ -14,16 +14,16 @@ public class WebScraperApp {
             String url = sc.nextLine();
             if(url.equals(SENTINEL))
                 break;
-            Set<String> pageLinks = scraper.getPageLinks(url);
+            List<String> pageLinks = scraper.getPageLinks(url);
             if(pageLinks == null){
                 continue;
             }
-            printUrlSet(pageLinks);
+            printUrlList(pageLinks);
         }
-        
+        sc.close();
     }
     
-    private static void printUrlSet(Set<String> urls){
+    private static void printUrlList(List<String> urls){
         int ind = 1;
         for(String url: urls){
             System.out.println(ind + ") "+ url);

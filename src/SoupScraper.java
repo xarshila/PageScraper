@@ -35,9 +35,9 @@ public class SoupScraper {
      * @return Set of links that occur on that page,
      * nulls if IOException is thrown while connecting
      */
-    public Set<String> getPageLinks(String url){
+    public List<String> getPageLinks(String url){
         
-        Set<String> pageLinks  = new HashSet<String>();
+        List<String> pageLinks  = new LinkedList<String>();
 
         try {
             Connection  connection = Jsoup.connect(url);
@@ -63,8 +63,8 @@ public class SoupScraper {
      * @param attr
      * @return  list of attributes for selected cssQuery
      */
-    private Set<String> parseDocument(Document document, String cssQuery, String attr){
-        Set<String> result = new HashSet<String>();
+    private List<String> parseDocument(Document document, String cssQuery, String attr){
+        List<String> result = new LinkedList<String>();
         Elements elements = document.select(cssQuery);
         
         for(Element element: elements){
