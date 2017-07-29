@@ -1,12 +1,12 @@
 import java.util.*;
-public class WebScraperApp {
+public class WebScraperConsoleApp {
     private static final String SENTINEL    = "QUIT";
     private static final String IMG_OPTION  = "IMG";
     private static final String LINK_OPTION = "LINK";
     
     SoupScraper scraper;
     Scanner sc ;
-    public WebScraperApp(){
+    public WebScraperConsoleApp(){
         printHeader();
         scraper = new SoupScraper();
         sc = new Scanner(System.in);
@@ -19,7 +19,7 @@ public class WebScraperApp {
      * @param args
      */
     public static void main(String[] args){
-        WebScraperApp  app = new WebScraperApp();
+        WebScraperConsoleApp  app = new WebScraperConsoleApp();
     }
     
     /**

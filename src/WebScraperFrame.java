@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -20,7 +21,7 @@ public class WebScraperFrame extends JFrame implements ActionListener{
     
     // Table (Central Region)
     JTable resultTable;
-    ResultTableModel resulTableModel;
+    ResultTableModel resultTableModel;
     String[] colNames;
     int colNum;
     
@@ -28,24 +29,26 @@ public class WebScraperFrame extends JFrame implements ActionListener{
     JPanel south;
     JButton clearButton;
     
+    //Scraper
+    SoupScraper scraper;
+    
     public WebScraperFrame(){
+        scraper = new SoupScraper();
+        
        // set up table
        colNum = 3;
        colNames = new String[colNum];
        colNames[0] = "#";
        colNames[1] = "url";
        colNames[2] = "status";
-       resulTableModel  = new ResultTableModel(colNames);
-       
-       
-       
+       resultTableModel  = new ResultTableModel(colNames);
        
        // adding header
        topBar = getTopBar();
        this.getContentPane().add(topBar,BorderLayout.NORTH);
        
        // add  JTable on pane
-       resultTable = new JTable(resulTableModel);
+       resultTable = new JTable(resultTableModel);
        resultTable.getColumnModel().getColumn(0).setPreferredWidth(20);
        resultTable.getColumnModel().getColumn(1).setPreferredWidth(500);
        
@@ -82,13 +85,19 @@ public class WebScraperFrame extends JFrame implements ActionListener{
         return panel;
     }
     
+   
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().equals(scrapButton)){
-            resulTableModel.add("1", "IMG");
+            resultTableModel.clear();
+            Runnable scraping = new ScrapWorker(resultTableModel,scraper,urlField.getText(), 
+                                          imagesCheck.isSelected(),linksCheck.isSelected());
+            Thread t = new Thread(scraping);
+            t.start();
         }
         if(e.getSource().equals(clearButton)){
-            resulTableModel.clear();
+            resultTableModel.clear();
         }
     }
     
