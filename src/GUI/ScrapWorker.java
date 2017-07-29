@@ -85,6 +85,7 @@ class ScrapWorker implements Runnable{
             imgNum = imageSrcs.size();
             int ind = 1;
             for(String src : imageSrcs){
+                
                 SwingUtilities.invokeLater(new Runnable(){
                     @Override
                     public void run() {

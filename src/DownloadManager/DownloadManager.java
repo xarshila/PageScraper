@@ -21,6 +21,8 @@ public class DownloadManager {
         
     }
     
+    
+    
     public boolean download(String webUrl, String destUrl){
         // download file
         byte[] response = null;
@@ -43,6 +45,7 @@ public class DownloadManager {
             System.out.print("Download error: " + e.getMessage());
             return false;
         }
+        
         //save image
         try{
             FileOutputStream fos = new FileOutputStream(destUrl);

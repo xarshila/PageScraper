@@ -1,4 +1,6 @@
 package GUI;
+import javax.swing.JButton;
+import javax.swing.JTextField;
 import javax.swing.table.*;
 import java.util.*;
 /**
@@ -23,7 +25,7 @@ public class ResultTableModel  extends AbstractTableModel {
        grid = new ArrayList<List<Object>>();
        colNum = colNames.length;
        this.colNames = new String[colNum];
-       System.arraycopy(colNames, 0,this.colNames,0, colNum);
+       System.arraycopy(colNames, 0,this.colNames, 0, colNum);
     }
     
     /**
@@ -40,6 +42,7 @@ public class ResultTableModel  extends AbstractTableModel {
         list.add(type);
         
         grid.add(list);
+        
         fireTableDataChanged();
     }
     
@@ -65,8 +68,25 @@ public class ResultTableModel  extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         return grid.get(rowIndex).get(columnIndex);
     }
+    
     @Override
     public String getColumnName(int index){
         return colNames[index];
+    }
+    
+    @Override
+    public Class getColumnClass(int c) {
+        return getValueAt(0, c).getClass();
+    }
+    
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex){
+        if(columnIndex == 3)
+            return true;
+        return false;
+    }
+    
+    public void setValueAt(Object value, int row, int col) {
+        fireTableCellUpdated(row, col);
     }
 }

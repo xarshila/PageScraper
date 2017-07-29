@@ -31,10 +31,10 @@ public class SoupScraper implements Scraper {
         bannedLinks.add("#");
         bannedLinks.add("javascript:void(0)");
     }
-    
+    String url;
     @Override
     public List<String> getPageLinks(String url){
-        
+        this.url = url;
         List<String> pageLinks  = new LinkedList<String>();
 
         try {
@@ -68,7 +68,11 @@ public class SoupScraper implements Scraper {
         for(Element element: elements){
             if(bannedLinks.contains(element.attr(attr)))
                 continue;
-            result.add(element.attr(attr));
+            String src = element.attr(attr);
+            if(src.length() > 0 && src.charAt(0) == '/'){
+                src = url + src;
+            }
+            result.add(src);
         }
         
         return result;
@@ -78,7 +82,8 @@ public class SoupScraper implements Scraper {
     
     
     @Override
-    public List<String> getImageSrcs(String url){        
+    public List<String> getImageSrcs(String url){
+        this.url = url;
         List<String> pageLinks  = new LinkedList<String>();
 
         try {
