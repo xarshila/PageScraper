@@ -14,6 +14,7 @@ public class ResultTableModel  extends AbstractTableModel {
     
     public void add(String url, String type){
         List<Object> list = new ArrayList<Object>();
+        list.add(new Integer(grid.size() + 1));
         list.add(url);
         list.add(type);
         

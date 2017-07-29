@@ -13,6 +13,7 @@ public class WebScraperApp {
         runMainMenu();
         sc.close();
     }
+    
     /**
      * Console Application for Web Scrapper
      * @param args
