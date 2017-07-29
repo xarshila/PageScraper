@@ -32,13 +32,7 @@ public class SoupScraper implements Scraper {
         bannedLinks.add("javascript:void(0)");
     }
     
-    /**
-     * gets url of web page and pull downs all page links
-     * 
-     * @param url
-     * @return Set of links that occur on that page,
-     * nulls if IOException is thrown while connecting
-     */
+    @Override
     public List<String> getPageLinks(String url){
         
         List<String> pageLinks  = new LinkedList<String>();
@@ -83,13 +77,7 @@ public class SoupScraper implements Scraper {
     
     
     
-    /**
-     * gets url of web page and pull downs all page links
-     * 
-     * @param url
-     * @return Set of links that occur on that page,
-     * nulls if IOException is thrown while connecting
-     */
+    @Override
     public List<String> getImageSrcs(String url){        
         List<String> pageLinks  = new LinkedList<String>();
 
@@ -110,6 +98,7 @@ public class SoupScraper implements Scraper {
     }
     
     
+  
     public String checkUrl(String url){
         try {
             Connection  connection = Jsoup.connect(url);
