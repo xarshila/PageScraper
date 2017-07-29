@@ -17,6 +17,8 @@ import org.jsoup.select.Elements;
  * @author Lasha Kharshiladze
  */
 public class SoupScraper {
+    public static final String OK = "GOOD_URL[#12314124sdmaslsad]";
+    
     private static final String USER_AGENT = "Mozilla/5.0 (Windows; U; WindowsNT 5.1;"
                                 + " en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6";
     private static final String REFERRER = "http://www.google.com";
@@ -110,4 +112,18 @@ public class SoupScraper {
         return pageLinks;
     }
     
+    
+    public String checkUrl(String url){
+        try {
+            Connection  connection = Jsoup.connect(url);
+            Document document = connection.get();
+        } catch (IOException e) {
+            return e.getMessage();
+        }
+        catch(Exception e){
+            return e.getMessage();
+        }
+        return OK;
+        
+    }
 }

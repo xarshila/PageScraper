@@ -11,7 +11,7 @@ import GUI.ResultTableModel;
 import Scraper.SoupScraper;
 
 public class WebScraperFrame extends JFrame implements ActionListener{
-    private static final int FRAME_WIDTH    = 650;
+    private static final int FRAME_WIDTH    = 700;
     private static final int FRAME_HEIGHT   = 700;
     private static final int URL_FIELD_LEN  = 30;
     
@@ -32,12 +32,16 @@ public class WebScraperFrame extends JFrame implements ActionListener{
     // South Region
     JPanel south;
     JButton clearButton;
-    
+    JLabel statusLabel;
     //Scraper
     SoupScraper scraper;
-    
+    ScrapWorker scraping;
+    Thread      scrapingThread;
     public WebScraperFrame(){
-        scraper = new SoupScraper();
+        scraper  =  new SoupScraper();
+        scraping =  new ScrapWorker();
+        scrapingThread = new Thread(scraping);
+        scrapingThread.start();
         
        // set up table
        colNum = 3;
@@ -61,8 +65,10 @@ public class WebScraperFrame extends JFrame implements ActionListener{
        
        // south Region 
        south = new JPanel();
-       clearButton = new JButton("Clear");
-       south.add(clearButton);
+       statusLabel = new JLabel("");
+       south.add(statusLabel,0,0);
+       
+       
        this.getContentPane().add(south, BorderLayout.SOUTH);
        
        //Action Listeners
@@ -74,9 +80,10 @@ public class WebScraperFrame extends JFrame implements ActionListener{
     
     private JPanel getTopBar(){
         JPanel panel = new JPanel();
-        JLabel urlLabel = new JLabel("url for scrap:");
+        JLabel urlLabel = new JLabel("URL:");
         urlField = new JTextField(URL_FIELD_LEN);
         scrapButton = new JButton("Scrap!");
+        clearButton = new JButton("Clear");
         imagesCheck = new JCheckBox("Images");
         linksCheck = new JCheckBox("Links");
         linksCheck.setSelected(true);
@@ -84,24 +91,38 @@ public class WebScraperFrame extends JFrame implements ActionListener{
         panel.add(urlLabel);
         panel.add(urlField);
         panel.add(scrapButton);
+        panel.add(clearButton);
         panel.add(linksCheck);
         panel.add(imagesCheck);
         return panel;
     }
-    
-   
+    /**
+     * @param url
+     * @return if given url respons scraper request
+     */
+    private boolean checkUrl(String url){
+        String res = scraper.checkUrl(url);
+        if(res.equals(SoupScraper.OK))
+            return true;
+        statusLabel.setText(res);
+        return false;
+    }
     
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().equals(scrapButton)){
+            if(!checkUrl(urlField.getText()))
+                return;
             resultTableModel.clear();
-            Runnable scraping = new ScrapWorker(resultTableModel,scraper,urlField.getText(), 
-                                          imagesCheck.isSelected(),linksCheck.isSelected());
-            Thread t = new Thread(scraping);
-            t.start();
+            
+            scraping.update(resultTableModel,scraper,urlField.getText(),statusLabel, 
+                            imagesCheck.isSelected(),linksCheck.isSelected());
+            scraping.go();
+            
         }
         if(e.getSource().equals(clearButton)){
             resultTableModel.clear();
+            statusLabel.setText("Everything Cleaned Up!");
         }
     }
     

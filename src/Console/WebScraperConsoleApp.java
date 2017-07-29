@@ -107,4 +107,6 @@ public class WebScraperConsoleApp {
         System.out.println("------------------------------------------------------");
         System.out.println();
     }
+    
+    
 }

@@ -2,7 +2,7 @@ package GUI;
 import javax.swing.table.*;
 import java.util.*;
 public class ResultTableModel  extends AbstractTableModel {
-    private static final int DEF_COL_NUM = 2;
+    private static final int DEF_COL_NUM = 3;
     List<List<Object>> grid;
     String[] colNames;
     int colNum;
