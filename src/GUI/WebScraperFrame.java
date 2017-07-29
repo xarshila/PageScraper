@@ -1,3 +1,4 @@
+package GUI;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -5,6 +6,9 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.*;
+
+import GUI.ResultTableModel;
+import Scraper.SoupScraper;
 
 public class WebScraperFrame extends JFrame implements ActionListener{
     private static final int FRAME_WIDTH    = 650;

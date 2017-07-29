@@ -1,6 +1,10 @@
+package GUI;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
+
+import GUI.ResultTableModel;
+import Scraper.SoupScraper;
 
 /**
  * ScrapWorker class is responsible for:

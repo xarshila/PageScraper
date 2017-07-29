@@ -1,4 +1,7 @@
+package Console;
 import java.util.*;
+
+import Scraper.SoupScraper;
 public class WebScraperConsoleApp {
     private static final String SENTINEL    = "QUIT";
     private static final String IMG_OPTION  = "IMG";
