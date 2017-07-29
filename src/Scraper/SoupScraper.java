@@ -16,13 +16,10 @@ import org.jsoup.select.Elements;
  * 
  * @author Lasha Kharshiladze
  */
-public class SoupScraper {
-    public static final String OK = "GOOD_URL[#12314124sdmaslsad]";
-    
+public class SoupScraper implements Scraper {
     private static final String USER_AGENT = "Mozilla/5.0 (Windows; U; WindowsNT 5.1;"
                                 + " en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6";
     private static final String REFERRER = "http://www.google.com";
-    
     // Links that are not meaninfull for example: '#', "javascript:void(0)"
     private final Set<String> bannedLinks;
     

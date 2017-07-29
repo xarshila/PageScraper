@@ -1,14 +1,21 @@
 package Console;
 import java.util.*;
 
+import Scraper.Scraper;
 import Scraper.SoupScraper;
 public class WebScraperConsoleApp {
+    /* Constants */
     private static final String SENTINEL    = "QUIT";
     private static final String IMG_OPTION  = "IMG";
     private static final String LINK_OPTION = "LINK";
     
-    SoupScraper scraper;
+    Scraper scraper;
     Scanner sc ;
+    
+    /**
+     * Default Construct:
+     * runs maim menu 
+     */
     public WebScraperConsoleApp(){
         printHeader();
         scraper = new SoupScraper();

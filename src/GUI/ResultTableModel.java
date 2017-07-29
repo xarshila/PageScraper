@@ -1,18 +1,38 @@
 package GUI;
 import javax.swing.table.*;
 import java.util.*;
+/**
+ * Class ResultModelTable:
+ * Model for JTable to make Data abstraction
+ * 
+ * @author Lasha Kharshiladze
+ *
+ */
 public class ResultTableModel  extends AbstractTableModel {
     private static final int DEF_COL_NUM = 3;
+    
     List<List<Object>> grid;
     String[] colNames;
     int colNum;
+    
+    /**
+     * Constructor creates TableModel with given colNames
+     * @param colNames
+     */
     public ResultTableModel(String[] colNames){
        grid = new ArrayList<List<Object>>();
        colNum = colNames.length;
        this.colNames = new String[colNum];
        System.arraycopy(colNames, 0,this.colNames,0, colNum);
-;    }
+    }
     
+    /**
+     * Adding Row into ResultTableModel
+     * auto indexing
+     * @param url
+     * @param type
+     * 
+     */
     public void add(String url, String type){
         List<Object> list = new ArrayList<Object>();
         list.add(new Integer(grid.size() + 1));
@@ -22,6 +42,7 @@ public class ResultTableModel  extends AbstractTableModel {
         grid.add(list);
         fireTableDataChanged();
     }
+    
     /**
      * Clears table 
      */

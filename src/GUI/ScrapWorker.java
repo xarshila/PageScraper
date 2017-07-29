@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 import GUI.ResultTableModel;
+import Scraper.Scraper;
 import Scraper.SoupScraper;
 
 /**
@@ -20,40 +21,24 @@ import Scraper.SoupScraper;
 class ScrapWorker implements Runnable{
         private static final int SCRAP_DELAY = 80;
         private static final int DELAY_PER_NUM = 3;
+        private static final int SMALL_DELAY = 20;
         Semaphore sem;
          
         // references from outside
         String           url;
-        SoupScraper      scraper;
+        Scraper          scraper;
         ResultTableModel resultTableModel;
         boolean images;
         boolean links;
-        JLabel statusLabel;
+        JLabel  statusLabel;
         int linkNum;
         int imgNum;
-        /**
-         * Defualt Constructor
-         * 
-         * @param resultTableModel
-         * @param scraper
-         * @param url
-         * @param images
-         * @param links
-         */
-        public ScrapWorker(ResultTableModel resultTableModel, SoupScraper scraper, String url, JLabel statusLabel, boolean images, boolean links){
-            this.url     = url;
-            this.scraper = scraper;
-            this.images  = images;
-            this.links   = links;
-            this.resultTableModel = resultTableModel;
-            this.statusLabel      = statusLabel;
-            this.linkNum = 0;
-            this.imgNum = 0;
-        }
+        
         public ScrapWorker(){
             sem = new Semaphore(0);
         }
-        public void update(ResultTableModel resultTableModel, SoupScraper scraper, String url, JLabel statusLabel, boolean images, boolean links){
+        
+        public void update(ResultTableModel resultTableModel, Scraper scraper, String url, JLabel statusLabel, boolean images, boolean links){
             this.url     = url;
             this.scraper = scraper;
             this.images  = images;
@@ -61,7 +46,7 @@ class ScrapWorker implements Runnable{
             this.resultTableModel = resultTableModel;
             this.statusLabel      = statusLabel;
             this.linkNum = 0;
-            this.imgNum = 0;
+            this.imgNum  = 0;
         }
         
         @Override
@@ -116,7 +101,7 @@ class ScrapWorker implements Runnable{
                     if(ind % DELAY_PER_NUM == 0)
                         Thread.sleep(SCRAP_DELAY);
                     else
-                        Thread.sleep(20);
+                        Thread.sleep(SMALL_DELAY);
                 } catch (InterruptedException e) {
                    break;
                 }

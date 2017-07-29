@@ -8,8 +8,17 @@ import java.util.List;
 import javax.swing.*;
 
 import GUI.ResultTableModel;
+import Scraper.Scraper;
 import Scraper.SoupScraper;
 
+
+/**
+ * WebScraperFrame:
+ * GUI Interface for scraper in swing librery
+ * 
+ * @author Lasha Kharshiladze
+ *
+ */
 public class WebScraperFrame extends JFrame implements ActionListener{
     private static final int FRAME_WIDTH    = 700;
     private static final int FRAME_HEIGHT   = 700;
@@ -34,9 +43,14 @@ public class WebScraperFrame extends JFrame implements ActionListener{
     JButton clearButton;
     JLabel statusLabel;
     //Scraper
-    SoupScraper scraper;
+    Scraper scraper;
     ScrapWorker scraping;
     Thread      scrapingThread;
+    
+    
+    /**
+     * Initializes all objects for GUI
+     */
     public WebScraperFrame(){
         scraper  =  new SoupScraper();
         scraping =  new ScrapWorker();
@@ -78,6 +92,9 @@ public class WebScraperFrame extends JFrame implements ActionListener{
        
     }
     
+    /**
+     * get header of frame (norther par of window)
+     */
     private JPanel getTopBar(){
         JPanel panel = new JPanel();
         JLabel urlLabel = new JLabel("URL:");
@@ -96,13 +113,16 @@ public class WebScraperFrame extends JFrame implements ActionListener{
         panel.add(imagesCheck);
         return panel;
     }
+    
     /**
+     * checks if is it possible to connect given url
+     * 
      * @param url
      * @return if given url respons scraper request
      */
     private boolean checkUrl(String url){
         String res = scraper.checkUrl(url);
-        if(res.equals(SoupScraper.OK))
+        if(res.equals(Scraper.OK))
             return true;
         statusLabel.setText(res);
         return false;
@@ -126,6 +146,10 @@ public class WebScraperFrame extends JFrame implements ActionListener{
         }
     }
     
+    /**
+     * Application:
+     * runs WebScraperFrame 
+     */
     public static void main(String[] args){
         WebScraperFrame scraperFrame = new WebScraperFrame();
         scraperFrame.setSize( new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
