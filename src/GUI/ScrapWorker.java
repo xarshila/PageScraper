@@ -19,7 +19,7 @@ import Scraper.SoupScraper;
  */
 class ScrapWorker implements Runnable{
         private static final int SCRAP_DELAY = 80;
-        
+        private static final int DELAY_PER_NUM = 3;
         Semaphore sem;
          
         // references from outside
@@ -98,6 +98,7 @@ class ScrapWorker implements Runnable{
             if(imageSrcs == null)
                 return; 
             imgNum = imageSrcs.size();
+            int ind = 1;
             for(String src : imageSrcs){
                 SwingUtilities.invokeLater(new Runnable(){
                     @Override
@@ -112,10 +113,14 @@ class ScrapWorker implements Runnable{
                     
                 });
                 try {
-                    Thread.sleep(SCRAP_DELAY);
+                    if(ind % DELAY_PER_NUM == 0)
+                        Thread.sleep(SCRAP_DELAY);
+                    else
+                        Thread.sleep(20);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                   break;
                 }
+                ind++;
             }
             
         }
@@ -129,6 +134,7 @@ class ScrapWorker implements Runnable{
             if(pageLinks == null)
                 return;
             linkNum = pageLinks.size();
+            int ind = 0;
             for(String link : pageLinks){
                 SwingUtilities.invokeLater(new Runnable(){
                     @Override
@@ -143,10 +149,14 @@ class ScrapWorker implements Runnable{
                     
                 });
                 try {
-                    Thread.sleep(SCRAP_DELAY);
+                    if(ind % DELAY_PER_NUM == 0)
+                        Thread.sleep(SCRAP_DELAY);
+                    else
+                        Thread.sleep(20);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                   break;
                 }
+                ind++;
             }
         }
         
