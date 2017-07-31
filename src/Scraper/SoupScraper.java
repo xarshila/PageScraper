@@ -32,6 +32,7 @@ public class SoupScraper implements Scraper {
         bannedLinks.add("javascript:void(0)");
     }
     String url;
+    
     @Override
     public List<String> getPageLinks(String url){
         this.url = url;
@@ -64,17 +65,18 @@ public class SoupScraper implements Scraper {
     public List<String> parseDocumentByCSS(Document document, String cssQuery, String attr){
         List<String> result = new LinkedList<String>();
         Elements elements = document.select(cssQuery);
-        
+        Set<String> used = new TreeSet<String>();
         for(Element element: elements){
-            if(bannedLinks.contains(element.attr(attr)))
-                continue;
             String src = element.attr(attr);
+            if(bannedLinks.contains(src)  ||  used.contains(src))
+                continue;
+            used.add(src);
             if(src.length() > 0 && src.charAt(0) == '/'){
                 src = url + src;
             }
+            
             result.add(src);
         }
-        
         return result;
         
     }
@@ -85,7 +87,6 @@ public class SoupScraper implements Scraper {
     public List<String> getImageSrcs(String url){
         this.url = url;
         List<String> pageLinks  = new LinkedList<String>();
-
         try {
             Connection  connection = Jsoup.connect(url);
             Document document = connection.get();
@@ -103,7 +104,7 @@ public class SoupScraper implements Scraper {
     }
     
     
-  
+    @Override
     public String checkUrl(String url){
         try {
             Connection  connection = Jsoup.connect(url);

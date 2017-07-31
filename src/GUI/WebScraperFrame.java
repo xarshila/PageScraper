@@ -25,7 +25,15 @@ public class WebScraperFrame extends JFrame implements ActionListener{
     private static final int FRAME_WIDTH    = 700;
     private static final int FRAME_HEIGHT   = 700;
     private static final int URL_FIELD_LEN  = 30;
-    private static final int COL_NUM        = 3;
+    private static final int COL_NUM        = 4;
+    private static final int INDEX_COLUMN_LEN = 25;
+    private static final int TYPE_COLUMN_LEN  = 80;
+    private static final int CHECK_COLUMN_LEN = 80;
+    
+    private static final int SAVE_ALL         = 0;
+    private static final int SAVE_ALL_IMG     = 1;
+    private static final int SAVE_ALL_LINK    = 2;
+    private static final int SAVE_ALL_CHECKED = 3;
     
     // North region
     JPanel      topBar;
@@ -47,8 +55,11 @@ public class WebScraperFrame extends JFrame implements ActionListener{
     JLabel statusLabel;
     
     // East Region
-    JButton saveButton;
-    String saveUrl;
+    JButton saveAllButton;
+    JButton saveImgsButton;
+    JButton saveLinksButton;
+    JButton saveCheckedButton;
+    
     
     // Scraper
     Scraper scraper;
@@ -77,9 +88,13 @@ public class WebScraperFrame extends JFrame implements ActionListener{
        
        // easth region
        JPanel leftBar = new JPanel();
-       saveButton = new JButton("Save Images on Local");
-       leftBar.add(saveButton);
-       add(leftBar, BorderLayout.EAST);
+       saveCheckedButton = new JButton("Download Checked Files");
+       saveAllButton = new JButton("download all Files");
+       saveImgsButton = new JButton("download all images");
+       saveLinksButton = new JButton("download all links");
+       leftBar.add(saveCheckedButton);
+       
+       this.getContentPane().add(leftBar, BorderLayout.EAST);
        
        // south Region 
        south = new JPanel();
@@ -92,7 +107,11 @@ public class WebScraperFrame extends JFrame implements ActionListener{
        //Action Listeners
        scrapButton.addActionListener(this);
        clearButton.addActionListener(this);
-       saveButton.addActionListener(this);
+       
+       saveAllButton.addActionListener(this);
+       saveImgsButton.addActionListener(this);
+       saveLinksButton.addActionListener(this);
+       saveCheckedButton.addActionListener(this);
        this.pack();
        
     }
@@ -129,13 +148,18 @@ public class WebScraperFrame extends JFrame implements ActionListener{
         colNames = new String[colNum];
         colNames[0] = "#";
         colNames[1] = "url";
-        colNames[2] = "status";
+        colNames[2] = "type";
+        colNames[3] = "check";
         resultTableModel  = new ResultTableModel(colNames);
         
         // View
         resultTable = new JTable(resultTableModel);
-        resultTable.getColumnModel().getColumn(0).setPreferredWidth(20);
-        resultTable.getColumnModel().getColumn(1).setPreferredWidth(500);
+        resultTable.getColumnModel().getColumn(0).setPreferredWidth(INDEX_COLUMN_LEN);
+        resultTable.getColumnModel().getColumn(1).setPreferredWidth(1000);
+        resultTable.getColumnModel().getColumn(2).setPreferredWidth(TYPE_COLUMN_LEN);
+        resultTable.getColumnModel().getColumn(3).setPreferredWidth(CHECK_COLUMN_LEN);
+       
+        // add scroll area
         JScrollPane scrollPane = new JScrollPane(resultTable);
         this.getContentPane().add(scrollPane);
     }
@@ -156,54 +180,83 @@ public class WebScraperFrame extends JFrame implements ActionListener{
     
     @Override
     public void actionPerformed(ActionEvent e) {
+        // Scrap button Slicked
         if(e.getSource().equals(scrapButton)){
             if(!checkUrl(urlField.getText()))
                 return;
             resultTableModel.clear();
             
+            // give references to scraper
             scraping.update(resultTableModel,scraper,urlField.getText(),statusLabel, 
                             imagesCheck.isSelected(),linksCheck.isSelected());
+            // unlock scraping semaphore 
             scraping.go();
             
         }
-        if(e.getSource().equals(saveButton)){
-            JFileChooser chooser;
-            chooser = new JFileChooser();
-            chooser.setCurrentDirectory(new java.io.File("."));
-            chooser.setDialogTitle("Choose Folder for Saving Resources");
-            chooser.setFileSelectionMode(JFileChooser.SAVE_DIALOG);
-            chooser.setApproveButtonText("Save");
-            
-            chooser.setAcceptAllFileFilterUsed(false);
-            
-            if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) { 
-                 saveUrl = chooser.getSelectedFile().toString();
-                for(int i = 0; i < resultTable.getRowCount(); i++){
-                    String webUrl = (String)resultTable.getValueAt(i, 1);
-                    String type = (String)resultTable.getValueAt(i, 2);
-                    if(!type.equals("img"))
-                        continue;
-                    int pInd = webUrl.length() - 1;
-                    for(; pInd >=0 ; pInd-- ){
-                        if(webUrl.charAt(pInd) == '/')
-                            break;
-                    }
-                    String  destUrl = saveUrl;
-                    
-                        destUrl += webUrl.substring(pInd);
-                    downloadManager.download(webUrl, destUrl);
-                }
-            }
+        if(e.getSource().equals(saveCheckedButton)){
+            downloadOnLocal(SAVE_ALL_CHECKED);
             
         }
+        // Clear  Button was clicked
         if(e.getSource().equals(clearButton)){
             resultTableModel.clear();
             statusLabel.setText("Everything Cleaned Up!");
         }
     }
     
+    public void downloadOnLocal(int policy){
+     // Set up File choser Frame
+        JFileChooser chooser;
+        chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new java.io.File("."));
+        chooser.setDialogTitle("Choose Folder for Saving Resources");
+        chooser.setFileSelectionMode(JFileChooser.SAVE_DIALOG);
+        chooser.setApproveButtonText("Save");
+        
+        // If Save button(on chooser) was clicked 
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) { 
+            String saveUrl = chooser.getSelectedFile().toString();
+            for(int i = 0; i < resultTable.getRowCount(); i++){
+                
+                String webUrl = (String)resultTable.getValueAt(i, 1);
+                String type = (String)resultTable.getValueAt(i, 2);
+                Boolean checked = (Boolean)resultTable.getValueAt(i, 3);
+                if(!checked && policy == SAVE_ALL_CHECKED)
+                    continue;
+                if(type.equals("img") && policy == SAVE_ALL_LINK)
+                    continue;
+                if(type.equals("link") && policy == SAVE_ALL_IMG)
+                    continue;
+                saveUrl += "/" + getFileName(webUrl, type, i);
+                downloadManager.download(webUrl, saveUrl);
+                statusLabel.setText(saveUrl + " Saved");
+            }
+        }
+    }
     /**
-     * Application:
+     * for a given url getFileName return file name of that object
+     * if it is only page url retuns "";
+     * @param url
+     * @return
+     */
+    private String getFileName(String webUrl,String type, int row){
+        if(type.equals("link"))
+            return "link[row "+row+" .html";
+        String name = "";
+        int pInd = webUrl.length() - 1;
+        for(; pInd >=0 ; pInd-- ){
+            if(webUrl.charAt(pInd) == '/')
+                break;
+        }
+        
+        if(pInd != -1)
+            name = webUrl.substring(pInd + 1);
+        
+        return name;
+    }
+    
+    /**
+     * Application Launcher:
      * runs WebScraperFrame 
      */
     public static void main(String[] args){

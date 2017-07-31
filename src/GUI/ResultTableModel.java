@@ -11,7 +11,7 @@ import java.util.*;
  *
  */
 public class ResultTableModel  extends AbstractTableModel {
-    private static final int DEF_COL_NUM = 3;
+    private static final int DEF_COL_NUM = 4;
     
     List<List<Object>> grid;
     String[] colNames;
@@ -40,6 +40,7 @@ public class ResultTableModel  extends AbstractTableModel {
         list.add(new Integer(grid.size() + 1));
         list.add(url);
         list.add(type);
+        list.add(new Boolean( false)           );
         
         grid.add(list);
         
@@ -76,17 +77,18 @@ public class ResultTableModel  extends AbstractTableModel {
     
     @Override
     public Class getColumnClass(int c) {
+        
         return getValueAt(0, c).getClass();
     }
     
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex){
-        if(columnIndex == 3)
-            return true;
-        return false;
+       
+        return (columnIndex == 3);
     }
-    
+    @Override
     public void setValueAt(Object value, int row, int col) {
+        grid.get(row).set(col, value);        
         fireTableCellUpdated(row, col);
     }
 }

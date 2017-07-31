@@ -38,6 +38,16 @@ class ScrapWorker implements Runnable{
             sem = new Semaphore(0);
         }
         
+        /**
+         * takes outer references to add scraped urls 
+         * 
+         * @param resultTableModel
+         * @param scraper
+         * @param url
+         * @param statusLabel
+         * @param images
+         * @param links
+         */
         public void update(ResultTableModel resultTableModel, Scraper scraper, String url, JLabel statusLabel, boolean images, boolean links){
             this.url     = url;
             this.scraper = scraper;
