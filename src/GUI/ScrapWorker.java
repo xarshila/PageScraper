@@ -19,9 +19,9 @@ import Scraper.SoupScraper;
  * @author Lasha Kharshiladze
  */
 class ScrapWorker implements Runnable{
-        private static final int SCRAP_DELAY = 80;
-        private static final int DELAY_PER_NUM = 3;
-        private static final int SMALL_DELAY = 20;
+        private static final int SCRAP_DELAY = 40;
+        private static final int DELAY_PER_NUM = 10;
+        private static final int SMALL_DELAY = 10;
         Semaphore sem;
          
         // references from outside

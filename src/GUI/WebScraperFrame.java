@@ -92,8 +92,12 @@ public class WebScraperFrame extends JFrame implements ActionListener{
        saveAllButton = new JButton("download all Files");
        saveImgsButton = new JButton("download all images");
        saveLinksButton = new JButton("download all links");
-       leftBar.add(saveCheckedButton);
        
+       leftBar.setLayout(new BoxLayout(leftBar,  BoxLayout.Y_AXIS));
+       leftBar.add(saveAllButton);
+       leftBar.add(saveImgsButton);
+       leftBar.add(saveLinksButton);
+       leftBar.add(saveCheckedButton);
        this.getContentPane().add(leftBar, BorderLayout.EAST);
        
        // south Region 
@@ -196,6 +200,15 @@ public class WebScraperFrame extends JFrame implements ActionListener{
         if(e.getSource().equals(saveCheckedButton)){
             downloadOnLocal(SAVE_ALL_CHECKED);
             
+        }
+        if(e.getSource().equals(saveAllButton)){
+            downloadOnLocal(SAVE_ALL);
+        }
+        if(e.getSource().equals(saveImgsButton)){
+            downloadOnLocal(SAVE_ALL_IMG);
+        }
+        if(e.getSource().equals(saveLinksButton)){
+            downloadOnLocal(SAVE_ALL_LINK);
         }
         // Clear  Button was clicked
         if(e.getSource().equals(clearButton)){
